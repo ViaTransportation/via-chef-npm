@@ -21,18 +21,15 @@
 # limitations under the License.
 #
 
-include_recipe 'nodejs'
-
 package 'curl'
 
-bash 'install npm - package manager for node' do
-  cwd '/usr/local/src'
-  user 'root'
+bash "register to repo" do
+  cwd "/usr/local/src"
+  user "root"
   code <<-EOF
-    mkdir -p npm-v#{node['npm']['version']} && \
-    cd npm-v#{node['npm']['version']}
-    curl -L http://registry.npmjs.org/npm/-/npm-#{node['npm']['version']}.tgz | tar xzf - --strip-components=1 && \
-    make uninstall dev
+    curl -sL https://deb.nodesource.com/setup | sudo bash -
+    sudo apt-get install -y nodejs
   EOF
-  not_if "npm -v 2>&1 | grep '#{node['npm']['version']}'"
 end
+
+include_recipe 'nodejs'
